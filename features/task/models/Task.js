@@ -20,6 +20,7 @@ let taskSchema = mongoose.Schema(
       enum: ["pending", "completed", "cancelled"],
       default: "pending",
     },
+    
     operatedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
