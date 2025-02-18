@@ -65,7 +65,7 @@ module.exports = {
   createToken: (data, expiresIn = 36000) => {
     try {
       return jwt.sign({ ...data }, connection.passwordSecretKey, {
-        expiresIn: expiresIn, //sec
+        expiresIn, //sec
       });
     } catch (error) {
       return null;

@@ -9,9 +9,8 @@ router.use(function (req, res, next) {
 });
 
 // user authentication apis
-router.route("/auth/register").post(UserController.create);
+router.route("/auth/signup").post(UserController.create);
 router.route("/auth/login").post(UserController.emailLogin);
-router.route("/users/profile").get(UserController.profileInfo);
 router.route("/islogin").get(UserController.accountLoginStatus);
 
 module.exports = router;

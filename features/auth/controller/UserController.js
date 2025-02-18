@@ -2,14 +2,13 @@ let request = require("request");
 let mongoose = require("mongoose");
 var CryptoJS = require("crypto-js");
 const connection = require("../../../config/connection");
-const configuration = require("../../../config/configuration");
 const returnCode = require("../../../config/responseCode").returnCode;
 const User = require("../model/User");
 const UtilController = require("../../../api/controller/services/UtilController");
 const Common = require("../../../api/controller/Common");
 const {
   addUserToHeader,
-} = require("../../../api/controller/services/AuthorizationController");
+} = require("../../../api/controller/services/UtilController");
 
 module.exports = {
   // this function is used to check the user login status, does their session is there or not before login
@@ -19,12 +18,10 @@ module.exports = {
       let responseCode = returnCode.invalidSession;
 
       if (UtilController.isEmpty(req.user._id)) {
-        UtilController.throwError("User id is not found");
+        return UtilController.throwError("User id is not found");
       }
       const user = await User.findById(req.user._id)
-        .select(
-          "fname lname email mobileNo userName profileImage userType permission deliveryAddress gender dob isSuperAdmin"
-        )
+        .select("first_name last_name email mobileNo userName userType ")
         .populate("permission")
         .lean();
 
@@ -39,7 +36,7 @@ module.exports = {
   emailLogin: async function (req, res, next) {
     try {
       let userCode = returnCode.validEmail;
-      let userName = req.body.email;
+      let userName = req.body.email?.trim();
       let password = req.body.password;
 
       // check the user name and password is found in body
@@ -50,7 +47,6 @@ module.exports = {
         return UtilController.throwError("Password not found");
       }
 
-      userName = userName.trim();
       // check the email is found in database in same userName and userType only one acc be registered
       let emailCheck = await User.findOne({
         userName,
@@ -99,7 +95,7 @@ module.exports = {
         }
       ).lean();
 
-      let token = UtilController.createToken(result, 36000);
+      let token = UtilController.createToken(result, connection.tokenTime);
 
       UtilController.sendSuccess(req, res, next, {
         responseCode: userCode,
@@ -124,13 +120,13 @@ module.exports = {
 
       if (userResult !== 0) {
         // it means already the account exists throw the error
-        UtilController.throwError(
+        return UtilController.throwError(
           "Account already exists Please try logging in"
         );
       }
       // email verification
       if (!UtilController.isValidEmail(createObj?.email)) {
-        UtilController.throwError("Please provide a valid email");
+        return UtilController.throwError("Please provide a valid email");
       }
       // password strength check
       const passwordStrength = UtilController.checkPasswordStrength(
@@ -174,41 +170,4 @@ module.exports = {
       UtilController.sendError(req, res, next, err);
     }
   },
-
-  profileInfo: async (req, res, next) => {
-    try {
-      let profile = await User.findById(req.user._id).select("-logs -password");
-      UtilController.sendSuccess(req, res, next, {
-        profile,
-        message: "User profile info",
-      });
-    } catch (err) {
-      UtilController.sendError(req, res, next, err);
-    }
-  },
-  updateProfile: async (req, res, next) => {
-    try {
-      let profileObj = { ...req.body };
-      await User.findByIdAndUpdate(req.user._id, profileObj);
-
-      UtilController.sendSuccess(req, res, next, {
-        message: "User profile is updated successfully",
-      });
-    } catch (err) {
-      UtilController.sendError(req, res, next, err);
-    }
-  },
-
-  // accountLogout: async function (req, res, next) {
-  //   try {
-  //     if (!UtilController.isEmpty(req.session.userId)) {
-  //       req.session.destroy();
-  //     }
-  //     UtilController.sendSuccess(req, res, next, {
-  //       message: "user account is logout successfully",
-  //     });
-  //   } catch (err) {
-  //     UtilController.sendError(req, res, next, err);
-  //   }
-  // },
 };
