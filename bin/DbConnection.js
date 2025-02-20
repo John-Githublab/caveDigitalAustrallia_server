@@ -19,6 +19,8 @@ const dbConnection = (connection) => {
     mongoose.set("debug", false);
     mongoose.Promise = require("bluebird");
     mongoose.Promise = global.Promise;
+    console.log(connection.dbUrl);
+
     mongoose.connect(connection.dbUrl, {
       useNewUrlParser: true,
       useFindAndModify: false,
