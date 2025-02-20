@@ -16,7 +16,6 @@ const dbConnection = (connection) => {
       ? void 0
       : _a.length) >= 0
   ) {
-    console.log("hello world");
 
     mongoose.set("debug", false);
     mongoose.Promise = require("bluebird");

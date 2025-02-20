@@ -25,6 +25,8 @@ require("dotenv").config();
 //root of express
 var app = express();
 //db connection with mongoose
+console.log("hello world", connection);
+
 dbConnection(connection);
 
 app.use(cors(corsOptions));
