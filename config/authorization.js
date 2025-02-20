@@ -1,6 +1,6 @@
 module.exports = {
   user: {
-    authNotRequire: [""],
+    authNotRequire: ["/auth/login", "/auth/signup"],
     language: [],
   },
 };
