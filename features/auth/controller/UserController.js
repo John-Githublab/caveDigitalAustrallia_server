@@ -26,6 +26,8 @@ module.exports = {
         .populate("permission")
         .lean();
 
+        responseCode = returnCode?.validSession
+
       UtilController.sendSuccess(req, res, next, {
         responseCode,
         result: user,

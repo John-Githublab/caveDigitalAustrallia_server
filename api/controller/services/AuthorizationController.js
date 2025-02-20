@@ -33,9 +33,9 @@ module.exports = {
         });
       }
       // retrieves data from token and if the token is expired it throws and error
+      console.log(authtoken);
       let authTokenData = UtilController.verifyToken(authtoken);
       UtilController.addUserToHeader(req, authTokenData);
-      console.log(req);
 
       next();
     } catch (err) {
