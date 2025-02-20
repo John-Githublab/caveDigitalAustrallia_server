@@ -35,6 +35,8 @@ module.exports = {
       // retrieves data from token and if the token is expired it throws and error
       let authTokenData = UtilController.verifyToken(authtoken);
       UtilController.addUserToHeader(req, authTokenData);
+      console.log(req);
+
       next();
     } catch (err) {
       UtilController.sendError(req, res, next, err);

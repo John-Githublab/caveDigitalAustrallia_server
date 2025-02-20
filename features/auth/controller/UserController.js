@@ -16,6 +16,7 @@ module.exports = {
   accountLoginStatus: async function (req, res, next) {
     try {
       let responseCode = returnCode.invalidSession;
+      console.log(req.user);
 
       if (UtilController.isEmpty(req.user._id)) {
         return UtilController.throwError("User id is not found");
