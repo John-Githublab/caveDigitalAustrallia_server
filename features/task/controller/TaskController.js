@@ -57,7 +57,7 @@ module.exports = {
     try {
       const body = req.body;
       const taskObj = {};
-      const recordId = body?.recordId;
+      const recordId = req.params?.id;
       // title is a mandatory field
       if (UtilController.isEmpty(recordId)) {
         return UtilController.throwError("Id is a required field");
