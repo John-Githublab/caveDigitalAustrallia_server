@@ -7,7 +7,7 @@ module.exports = {
   list: async (req, res, next) => {
     try {
       const queryObj = {};
-      
+
       queryObj["operatedBy"] = req.user?._id;
 
       let result = await Task.find(queryObj)
@@ -42,6 +42,7 @@ module.exports = {
       }
 
       taskObj["operatedBy"] = req.user?._id;
+
 
       const result = await Task.create(taskObj);
 
@@ -91,7 +92,7 @@ module.exports = {
   },
   view: async (req, res, next) => {
     try {
-      const recordId = req.query?.recordId;
+      const recordId = req.params?.id;
       // title is a mandatory field
       if (UtilController.isEmpty(recordId)) {
         return UtilController.throwError("Task Id is a required field");

@@ -33,8 +33,12 @@ module.exports = {
         });
       }
       // retrieves data from token and if the token is expired it throws and error
-      console.log(authtoken);
       let authTokenData = UtilController.verifyToken(authtoken);
+      if (UtilController.isEmpty(authTokenData)) {
+        return UtilController.sendSuccess(req, res, next, {
+          responseCode: returnCode.invalidSession,
+        });
+      }
       UtilController.addUserToHeader(req, authTokenData);
 
       next();
