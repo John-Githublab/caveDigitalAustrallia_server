@@ -118,7 +118,7 @@ module.exports = {
   },
   delete: async (req, res, next) => {
     try {
-      const recordId = body?.recordId;
+      const recordId = req.params?.id;
       // title is a mandatory field
       if (UtilController.isEmpty(recordId)) {
         return UtilController.throwError("Task Id is a required field");
