@@ -43,7 +43,6 @@ module.exports = {
 
       taskObj["operatedBy"] = req.user?._id;
 
-
       const result = await Task.create(taskObj);
 
       UtilController.sendSuccess(req, res, next, {
@@ -100,7 +99,9 @@ module.exports = {
 
       const viewObj = { _id: recordId };
 
-      const result = await Task.findOne(viewObj)?.lean();
+      const result = await Task.findOne(viewObj)
+        .select("title description priority status")
+        ?.lean();
 
       UtilController.sendSuccess(req, res, next, {
         responseCode: returnCode.validSession,
