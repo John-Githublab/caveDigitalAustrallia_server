@@ -26,7 +26,7 @@ module.exports = {
         .populate("permission")
         .lean();
 
-        responseCode = returnCode?.validSession
+      responseCode = returnCode?.validSession;
 
       UtilController.sendSuccess(req, res, next, {
         responseCode,
@@ -168,6 +168,31 @@ module.exports = {
         responseCode: userCode,
         result: user,
         message: "User is Created successfully",
+      });
+    } catch (err) {
+      UtilController.sendError(req, res, next, err);
+    }
+  },
+  triggerMail: async function (req, res, next) {
+    try {
+      let responseCode = returnCode.invalidSession;
+      const userId = req.params?.email;
+
+      if (UtilController.isEmpty(userId)) {
+        return UtilController.throwError("Email id is not found");
+      }
+      const user = await User.count({ userName: userId });
+
+      if (UtilController.isEmpty(user)) {
+        return UtilController.throwError("Email doesnt exist ");
+      }
+
+      responseCode = returnCode?.validSession;
+
+      UtilController.sendSuccess(req, res, next, {
+        responseCode,
+        result: user,
+        message: "The OTP has been successfully sent to your email.",
       });
     } catch (err) {
       UtilController.sendError(req, res, next, err);
