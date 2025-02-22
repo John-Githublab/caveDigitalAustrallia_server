@@ -67,10 +67,10 @@ module.exports = {
       if (UtilController.isEmpty(recordId)) {
         return UtilController.throwError("Id is a required field");
       }
-      if (taskObj?.title) {
+      if (body?.title) {
         taskObj["title"] = body?.title;
       }
-      if (taskObj?.title) {
+      if (body?.description) {
         taskObj["description"] = body?.description;
       }
 
