@@ -11,7 +11,7 @@ module.exports = {
       queryObj["operatedBy"] = req.user?._id;
 
       const sortOrder = {
-        updatedAt: -1,
+        updated_at: -1,
       };
 
       let result = await Task.find(queryObj)
