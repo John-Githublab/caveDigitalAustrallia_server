@@ -237,10 +237,7 @@ module.exports = {
 
       await OTP.deleteOne({ userId });
 
-      const user = await User.findOne({ userName: userId }).lean()
-
-      console.log(user);
-      
+      const user = await User.findOne({ userName: userId }).lean();
 
       const hash = UtilController.createToken({ ...user });
 
@@ -276,7 +273,6 @@ module.exports = {
 
       let hash = UtilController.hashPassword(userPassword);
       const hashedPassword = hash.toString();
-      console.log(hashedPassword, req.user);
 
       await User.findByIdAndUpdate(userId, {
         $set: { password: hashedPassword },
