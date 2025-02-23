@@ -270,10 +270,15 @@ module.exports = {
       // hash the password
 
       let userPassword = password;
+      console.log(userPassword);
+
       let hash = UtilController.hashPassword(userPassword);
       const hashedPassword = hash.toString();
+      console.log(hashedPassword);
 
-      await User.findByIdAndUpdate(userId, { password: hashedPassword });
+      await User.findByIdAndUpdate(userId, {
+        $set: { password: hashedPassword },
+      });
 
       UtilController.sendSuccess(req, res, next, {
         responseCode: returnCode.validSession,
