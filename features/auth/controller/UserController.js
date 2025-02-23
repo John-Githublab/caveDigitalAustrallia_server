@@ -185,7 +185,7 @@ module.exports = {
       }
       const user = await User.count({ userName: userId });
 
-      if (user > 0) {
+      if (user === 0) {
         return UtilController.throwError("Email doesnt exist ");
       }
       // generates otp
