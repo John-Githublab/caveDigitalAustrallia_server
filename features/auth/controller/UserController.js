@@ -262,9 +262,7 @@ module.exports = {
       }
 
       // password strength check
-      const passwordStrength = UtilController.checkPasswordStrength(
-        createObj?.password
-      );
+      const passwordStrength = UtilController.checkPasswordStrength(password);
       if (passwordStrength) {
         UtilController.throwError(passwordStrength);
       }
