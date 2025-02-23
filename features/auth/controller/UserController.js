@@ -178,7 +178,7 @@ module.exports = {
   triggerMail: async function (req, res, next) {
     try {
       let responseCode = returnCode.invalidSession;
-      const userId = req.params?.email;
+      const userId = req.query?.email;
 
       if (UtilController.isEmpty(userId)) {
         return UtilController.throwError("Email id is not found");
