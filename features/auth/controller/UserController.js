@@ -237,11 +237,49 @@ module.exports = {
 
       await OTP.deleteOne({ userId });
 
+      const user = User.findOne({ userName: userId });
+
+      const hash = UtilController.createToken({ ...user });
+
       responseCode = returnCode.validSession;
 
       UtilController.sendSuccess(req, res, next, {
         responseCode,
-        message: "OTP verification successful. Please proceed with logging in.",
+        message: "OTP verification successful",
+        result: { temporaryToken: hash },
+      });
+    } catch (err) {
+      UtilController.sendError(req, res, next, err);
+    }
+  },
+  updatePassword: async (req, res, next) => {
+    try {
+      const password = req.body.password;
+      const userId = req.user._id;
+
+      if (UtilController.isEmpty(password)) {
+        UtilController.throwError("Password is empty");
+      }
+
+      // password strength check
+      const passwordStrength = UtilController.checkPasswordStrength(
+        createObj?.password
+      );
+      if (passwordStrength) {
+        UtilController.throwError(passwordStrength);
+      }
+
+      // hash the password
+
+      let userPassword = password;
+      let hash = UtilController.hashPassword(userPassword);
+      const hashedPassword = hash.toString();
+
+      await User.findByIdAndUpdate(userId, { password: hashedPassword });
+
+      UtilController.sendSuccess(req, res, next, {
+        responseCode: userCode,
+        message: "User Passwoord updated successfully",
       });
     } catch (err) {
       UtilController.sendError(req, res, next, err);
