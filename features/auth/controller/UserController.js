@@ -212,7 +212,7 @@ module.exports = {
       UtilController.sendError(req, res, next, err);
     }
   },
-  triggerMail: async function (req, res, next) {
+  verifyOtp: async function (req, res, next) {
     try {
       let responseCode = returnCode.invalidSession;
       const otp = req.body?.otp;

@@ -14,6 +14,7 @@ router.route("/auth/signup").post(UserController.create);
 router.route("/auth/login").post(UserController.emailLogin);
 router.route("/islogin").get(UserController.accountLoginStatus);
 router.route("/trigger/email/:email").get(UserController.triggerMail);
+router.route("/verify/otp").post(UserController.verifyOtp);
 
 // task route
 router.route("/tasks").post(TaskController.create);
