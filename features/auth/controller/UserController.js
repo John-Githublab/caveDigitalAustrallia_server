@@ -237,7 +237,7 @@ module.exports = {
 
       await OTP.deleteOne({ userId });
 
-      const user = User.findOne({ userName: userId });
+      const user = await User.findOne({ userName: userId });
 
       const hash = UtilController.createToken({ ...user });
 
