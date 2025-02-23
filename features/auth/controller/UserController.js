@@ -199,6 +199,8 @@ module.exports = {
           "An error occured while sending mail. please try again"
         );
       }
+      // remove existing otps for the same credentails
+      await OTP.deleteMany({ userId });
       // store the otp and email in database
       await OTP.create({ otp, userId });
 
@@ -229,9 +231,6 @@ module.exports = {
       const record = await OTP.findOne({ userId }).lean();
 
       // OTP Expiry Check
-      if (Date.now() > new Date(record.expiresAt).getTime()) {
-        return UtilController.throwError("OTP expired, request a new one.");
-      }
 
       const otpValue = record?.otpVal;
       if (Number(otp) !== Number(otpValue)) {
