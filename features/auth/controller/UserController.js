@@ -230,10 +230,7 @@ module.exports = {
 
       const record = await OTP.findOne({ userId }).lean();
 
-      // OTP Expiry Check
-      console.log(record);
-
-      const otpValue = record?.otpVal;
+      const otpValue = record?.otp;
       if (Number(otp) !== Number(otpValue)) {
         return UtilController.throwError("OTP is not matching try again!");
       }
