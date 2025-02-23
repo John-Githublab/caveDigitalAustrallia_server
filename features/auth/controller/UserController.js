@@ -9,6 +9,8 @@ const Common = require("../../../api/controller/Common");
 const {
   addUserToHeader,
 } = require("../../../api/controller/services/UtilController");
+const { sendMail } = require("../../../api/controller/services/MailController");
+const OTP = require("../../../models/OTP");
 
 module.exports = {
   // this function is used to check the user login status, does their session is there or not before login
@@ -186,13 +188,63 @@ module.exports = {
       if (UtilController.isEmpty(user)) {
         return UtilController.throwError("Email doesnt exist ");
       }
+      // generates otp
+      // triggers the mail to user and check any error occured
+      const otp = Math.floor(100000 + Math.random() * 900000);
+
+      const mailSend = await sendMail(userId, { otp });
+
+      if (UtilController.isEmpty(mailSend?.success)) {
+        return UtilController.throwError(
+          "An error occured while sending mail. please try again"
+        );
+      }
+      // store the otp and email in database
+      await OTP.create({ otp, userId });
 
       responseCode = returnCode?.validSession;
 
       UtilController.sendSuccess(req, res, next, {
         responseCode,
-        result: user,
         message: "The OTP has been successfully sent to your email.",
+      });
+    } catch (err) {
+      UtilController.sendError(req, res, next, err);
+    }
+  },
+  triggerMail: async function (req, res, next) {
+    try {
+      let responseCode = returnCode.invalidSession;
+      const otp = req.body?.otp;
+      const userId = req.body?.email;
+
+      if (UtilController.isEmpty(userId)) {
+        return UtilController.throwError("Email id is not found");
+      }
+
+      if (UtilController.isEmpty(otp)) {
+        return UtilController.throwError("Otp is empty");
+      }
+
+      const record = await OTP.findOne({ userId }).lean();
+
+      // OTP Expiry Check
+      if (Date.now() > new Date(record.expiresAt).getTime()) {
+        return UtilController.throwError("OTP expired, request a new one.");
+      }
+
+      const otpValue = record?.otpVal;
+      if (Number(otp) !== Number(otpValue)) {
+        return UtilController.throwError("OTP is not matching try again!");
+      }
+
+      await OTP.deleteOne({ userId });
+
+      responseCode = returnCode.validSession;
+
+      UtilController.sendSuccess(req, res, next, {
+        responseCode,
+        message: "Successfully matched",
       });
     } catch (err) {
       UtilController.sendError(req, res, next, err);
