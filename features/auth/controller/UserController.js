@@ -279,7 +279,7 @@ module.exports = {
 
       UtilController.sendSuccess(req, res, next, {
         responseCode: userCode,
-        message: "User Passwoord updated successfully",
+        message: "User Password updated successfully please try logging in",
       });
     } catch (err) {
       UtilController.sendError(req, res, next, err);
