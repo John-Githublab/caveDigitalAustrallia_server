@@ -241,7 +241,7 @@ module.exports = {
 
       UtilController.sendSuccess(req, res, next, {
         responseCode,
-        message: "Successfully matched",
+        message: "OTP verification successful. Please proceed with logging in.",
       });
     } catch (err) {
       UtilController.sendError(req, res, next, err);
