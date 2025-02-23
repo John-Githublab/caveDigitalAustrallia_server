@@ -276,7 +276,7 @@ module.exports = {
       await User.findByIdAndUpdate(userId, { password: hashedPassword });
 
       UtilController.sendSuccess(req, res, next, {
-        responseCode: userCode,
+        responseCode: returnCode.validSession,
         message: "User Password updated successfully please try logging in",
       });
     } catch (err) {
